@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Thuisbatterij Rendabel 2025 | Gratis calculator</title>
+  <meta name="description" content="Bereken binnen 30 seconden of een thuisbatterij rendabel is voor jouw situatie na afbouw salderingsregeling."/>
+  <style>
+    :root { --primary: #00d4aa; --dark: #1e293b; --light: #f8fafc; }
+    body { margin:0; font-family: system-ui, sans-serif; background: var(--light); color: var(--dark); line-height: 1.6; }
+    header { background: linear-gradient(135deg, #1e3a8a, #00d4aa); color: white; text-align: center; padding: 60px 20px; }
+    h1 { margin:0; font-size: 2.8rem; }
+    h2 { color: var(--primary); text-align: center; margin: 40px 0 20px; }
+    main { max-width: 800px; margin: 0 auto; padding: 20px; }
+    .calculator { background: white; padding: 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+    label { display: block; margin: 20px 0 8px; font-weight: 600; }
+    input, select { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem; }
+    button { background: var(--primary); color: white; border: none; padding: 16px 32px; font-size: 1.2rem; border-radius: 50px; cursor: pointer; width: 100%; margin-top: 30px; transition: 0.3s; }
+    button:hover { background: #00b894; transform: translateY(-2px); }
+    .result { margin-top: 40px; padding: 25px; background: #f0fdfa; border-radius: 12px; border-left: 6px solid var(--primary); font-size: 1.2rem; display: none; }
+    .cta { text-align: center; margin-top: 50px; }
+    .cta a { display: inline-block; background: #1e40af; color: white; padding: 18px 40px; border-radius: 50px; text-decoration: none; font-size: 1.3rem; font-weight: bold; }
+    footer { text-align: center; padding: 40px; color: #64748b; font-size: 0.9rem; }
+    @media (max-width: 600px) { h1 { font-size: 2.2rem; } }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Is een thuisbatterij rendabel voor jou in 2025?</h1>
+    <p style="font-size:1.3rem;margin-top:20px;">Gratis calculator – binnen 30 seconden jouw persoonlijke uitkomst</p>
+  </header>
+
+  <main>
+    <div class="calculator">
+      <h2>Jouw situatie</h2>
+      
+      <label>Jaarlijks stroomverbruik (kWh)</label>
+      <input type="number" id="verbruik" value="3500" placeholder="bijv. 3500">
+
+      <label>Hoeveel kWp zonnepanelen heb je?</label>
+      <input type="number" step="0.1" id="zonnepanelen" value="10" placeholder="bijv. 10">
+
+      <label>Huidige elektriciteitsprijs (€ per kWh)</label>
+      <input type="number" step="0.01" id="prijs" value="0.45" placeholder="bijv. 0.45">
+
+      <label>Btw-teruggave meerekenen? (21% korting)</label>
+      <select id="btw">
+        <option value="yes">Ja, ik wil btw terug</option>
+        21% btw-teruggave geldt tot eind 2026
+        <option value="no">Nee</option>
+      </select>
+
+      <button onclick="bereken()">Bereken mijn terugverdientijd</button>
+
+      <div id="resultaat" class="result"></div>
+    </div>
+
+    <div class="cta">
+      <h2>Exacte offerte op maat?</h2>
+      <p>Vul je postcode in bij Zonneplan en ontvang binnen 24 uur een persoonlijk aanbod (incl. subsidie-check)</p>
+      <a href="https://www.zonneplan.nl/thuisbatterij/" target="_blank">
+        Gratis & vrijblijvende offerte aanvragen →
+      </a>
+    </div>
+  </main>
+
+  <footer>
+    © 2025 thuisbatterijrendabel.nl – Onafhankelijke informatie over energieopslag<br>
+    <small>Let op: dit is een schatting. Werkelijke besparing hangt af van jouw situatie.</small>
+  </footer>
+
+  <script>
+    function bereken() {
+      const verbruik = parseFloat(document.getElementById('verbruik').value) || 0;
+      const panelen = parseFloat(document.getElementById('zonnepanelen').value) || 0;
+      const prijs = parseFloat(document.getElementById('prijs').value) || 0;
+      const btw = document.getElementById('btw').value;
+
+      // Realistische schattingen 2025
+      const batterijPerkWp = 1.2;                    // 1.2 kWh opslag per kWp
+      const prijsPerkWh = 750;                       // €750 per kWh incl. installatie
+      const eigenVerbruikZonder = 0.35;              // 35% eigen verbruik zonder batterij
+      const eigenVerbruikMet = 0.90;                 // 90% met batterij
+
+      const batterijGrootte = panelen * batterijPerkWp;
+      let kosten = batterijGrootte * prijsPerkWh;
+      if (btw === "yes") kosten *= 0.79; // 21% btw-teruggave
+
+      const extraBesparing = verbruik * (eigenVerbruikMet - eigenVerbruikZonder) * prijs;
+      const jaren = kosten / extraBesparing;
+
+      const resultaat = `
+        <strong> Jouw resultaat:</strong><br><br>
+        Aanbevolen batterij: <strong>${batterijGrootte.toFixed(1)} kWh</strong><br>
+        Geschatte kosten: <strong>€${kosten.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</strong> 
+        ${btw==="yes" ? "(incl. btw-teruggave)" : ""}<br>
+        Jaarlijkse besparing: <strong>€${extraBesparing.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</strong><br><br>
+        <strong>Terugverdientijd: ${jaren < 6 ? "✅ " : jaren < 9 ? "⚡ " : "⚠️ "}
+        ${jaren.toFixed(1)} jaar</strong><br><br>
+        ${jaren <= 7 ? "Een thuisbatterij is <strong>rendabel</strong> voor jouw situatie!" : 
+          jaren <= 10 ? "Het is <strong>grensgeval</strong> – offerte aanvragen loont." : 
+          "Terugverdientijd is langer dan 10 jaar – misschien nog even wachten."}
+      `;
+
+      document.getElementById('resultaat').innerHTML = resultaat;
+      document.getElementById('resultaat').style.display = 'block';
+      document.getElementById('resultaat').scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
